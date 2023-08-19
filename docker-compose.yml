@@ -1,0 +1,31 @@
+services:
+  danphe:
+    container_name: app
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BUILDKIT_INLINE_CACHE: "0"
+    volumes:
+      - ./src:/var/www/html
+    ports:
+      - 9000:80
+
+  mysql_db:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: danphe
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    ports:
+      - 9001:80
+    depends_on:
+      - mysql_db
